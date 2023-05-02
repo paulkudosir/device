@@ -11,7 +11,7 @@ VARIANT = android
 KERNEL_BASE_VERSION = 4.14-0
 
 # The kernel cmdline to use
-KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 datapart=/dev/disk/by-partlabel/userdata androidboot.selinux=permissive androidboot.hardware=rmx3430 buildvariant=eng droidian.lvm.prefer
+KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 androidboot.selinux=permissive androidboot.hardware=rmx3430 buildvariant=eng droidian.lvm.prefer
 
 # Slug for the device vendor. This is going to be used in the KERNELRELASE
 # and package names.
@@ -48,20 +48,20 @@ KERNEL_IMAGE_WITH_DTB = 1
 # Path to the DTB
 # If you leave this undefined, an attempt to find it automatically
 # will be made.
-KERNEL_IMAGE_DTB = arch/arm64/boot/dts/mediatek/mt6768.dtb
+#KERNEL_IMAGE_DTB = arch/arm64/boot/dts/mediatek/mt6768.dtb
 
 # Whether to include a DTB Overlay. Use 0 (no) or 1.
-KERNEL_IMAGE_WITH_DTB_OVERLAY = 1
+KERNEL_IMAGE_WITH_DTB_OVERLAY = 0
 
 # Path to the DTB overlay.
 # If you leave this undefined, an attempt to find it automatically
 # will be made.
-KERNEL_IMAGE_DTB_OVERLAY = arch/arm64/boot/dts/mediatek/oppo216AF.dtb
+#KERNEL_IMAGE_DTB_OVERLAY = arch/arm64/boot/dts/mediatek/oppo216AF.dtb
 
 # Whether to include the DTB Overlay into the kernel image
 # Use 0 (no, default) or 1.
 # dtbo.img will always be shipped in the linux-bootimage- package.
-KERNEL_IMAGE_WITH_DTB_OVERLAY_IN_KERNEL = 0
+KERNEL_IMAGE_WITH_DTB_OVERLAY_IN_KERNEL = 1
 
 # Path to a specifc configuration file for mkdtboimg.
 # The default is to leave it undefined.
@@ -183,4 +183,4 @@ DEB_BUILD_FOR = arm64
 KERNEL_ARCH = arm64
 
 # Kernel target to build
-KERNEL_BUILD_TARGET = Image.gz-dtb
+KERNEL_BUILD_TARGET = Image.gz

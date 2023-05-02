@@ -6,3 +6,17 @@ include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 	dh $@
 	
 override_dh_dwz:
+
+out/KERNEL_OBJ/dtb-merged: out/dtb-stamp
+ifeq ($(KERNEL_IMAGE_WITH_DTB),1)
+	rm -f $(KERNEL_OUT)/dtb
+	rm -f $(KERNEL_OUT)/dtb-merged
+ifeq ($(KERNEL_IMAGE_WITH_DTB_OVERLAY_IN_KERNEL),1)
+	KERNEL_IMAGE_DTB=/buildd/sources/debian/mt6768.dtb; \
+	KERNEL_IMAGE_DTB_OVERLAY=/buildd/sources/debian/dtbo.img; \
+	ufdt_apply_overlay $${KERNEL_IMAGE_DTB} $${KERNEL_IMAGE_DTB_OVERLAY} $(KERNEL_OUT)/dtb-merged
+endif
+else
+	touch $@
+endif
+
