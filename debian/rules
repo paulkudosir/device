@@ -4,3 +4,5 @@ include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 
 %:
 	dh $@
+	
+override_dh_dwz:

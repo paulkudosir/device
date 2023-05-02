@@ -8,23 +8,23 @@
 VARIANT = android
 
 # Kernel base version
-KERNEL_BASE_VERSION = 4.4-0
+KERNEL_BASE_VERSION = 4.14-0
 
 # The kernel cmdline to use
-KERNEL_BOOTIMAGE_CMDLINE = put-cmdline-here
+KERNEL_BOOTIMAGE_CMDLINE = bootopt=64S3,32N2,64N2 datapart=/dev/disk/by-partlabel/userdata androidboot.selinux=permissive androidboot.hardware=rmx3430 buildvariant=eng droidian.lvm.prefer
 
 # Slug for the device vendor. This is going to be used in the KERNELRELASE
 # and package names.
-DEVICE_VENDOR = vendor
+DEVICE_VENDOR = realme
 
 # Slug for the device model. Like above.
-DEVICE_MODEL = device1
+DEVICE_MODEL = rmx3430
 
 # Slug for the device platform. If unsure, keep this commented.
 #DEVICE_PLATFORM = platform
 
 # Marketing-friendly full-name. This will be used inside package descriptions
-DEVICE_FULL_NAME = Vendor Device 1
+DEVICE_FULL_NAME = RealMe Narzo 50a
 
 # Whether to use configuration fragments to augment the kernel configuration.
 # If unsure, keep this to 0.
@@ -40,7 +40,7 @@ KERNEL_CONFIG_USE_DIFFCONFIG = 0
 #KERNEL_PRODUCT_DIFFCONFIG = my_diffconfig
 
 # Defconfig to use
-KERNEL_DEFCONFIG = defconfig
+KERNEL_DEFCONFIG = nokit_defconfig
 
 # Whether to include DTBs with the image. Use 0 (no) or 1.
 KERNEL_IMAGE_WITH_DTB = 1
@@ -48,7 +48,7 @@ KERNEL_IMAGE_WITH_DTB = 1
 # Path to the DTB
 # If you leave this undefined, an attempt to find it automatically
 # will be made.
-#KERNEL_IMAGE_DTB = arch/arm64/boot/dts/qcom/my_dtb.dtb
+KERNEL_IMAGE_DTB = arch/arm64/boot/dts/mediatek/mt6768.dtb
 
 # Whether to include a DTB Overlay. Use 0 (no) or 1.
 KERNEL_IMAGE_WITH_DTB_OVERLAY = 1
@@ -56,7 +56,7 @@ KERNEL_IMAGE_WITH_DTB_OVERLAY = 1
 # Path to the DTB overlay.
 # If you leave this undefined, an attempt to find it automatically
 # will be made.
-#KERNEL_IMAGE_DTB_OVERLAY = arch/arm64/boot/dts/qcom/my_overlay.dtbo
+KERNEL_IMAGE_DTB_OVERLAY = arch/arm64/boot/dts/mediatek/oppo216AF.dtb
 
 # Whether to include the DTB Overlay into the kernel image
 # Use 0 (no, default) or 1.
@@ -73,17 +73,17 @@ KERNEL_IMAGE_WITH_DTB_OVERLAY_IN_KERNEL = 0
 
 # Various other settings that will be passed straight to mkbootimg
 KERNEL_BOOTIMAGE_PAGE_SIZE = 4096
-KERNEL_BOOTIMAGE_BASE_OFFSET = 0x00000000
+KERNEL_BOOTIMAGE_BASE_OFFSET = 0x40078000
 KERNEL_BOOTIMAGE_KERNEL_OFFSET = 0x00008000
-KERNEL_BOOTIMAGE_INITRAMFS_OFFSET = 0x01000000
-KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET = 0x00f00000
-KERNEL_BOOTIMAGE_TAGS_OFFSET = 0x00000100
+KERNEL_BOOTIMAGE_INITRAMFS_OFFSET = 0x07c08000
+KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET = 0xbff88000
+KERNEL_BOOTIMAGE_TAGS_OFFSET = 0x0bc08000
 
 # Specify boot image security patch level if needed
 #KERNEL_BOOTIMAGE_PATCH_LEVEL = 2022-04-05
 
 # Required for header version 2, ignore otherwise
-KERNEL_BOOTIMAGE_DTB_OFFSET = 0x1f00000
+KERNEL_BOOTIMAGE_DTB_OFFSET = 0x0bc08000
 
 # Kernel bootimage version. Defaults to 0 (legacy header).
 # As a rule of thumb:
@@ -91,7 +91,7 @@ KERNEL_BOOTIMAGE_DTB_OFFSET = 0x1f00000
 # Devices launched with Android 9: version 1
 # Devices launched with Android 10: version 2
 # Devices launched with Android 11: version 2 or 3 (GKI)
-KERNEL_BOOTIMAGE_VERSION = 0
+KERNEL_BOOTIMAGE_VERSION = 2
 
 ########################################################################
 # Android verified boot
@@ -100,7 +100,7 @@ KERNEL_BOOTIMAGE_VERSION = 0
 # Whether to build a flashable vbmeta.img. Please note that currently
 # only empty vbmeta images (disabling verified boot) can be generated.
 # Use 0 (no) or 1 (default).
-DEVICE_VBMETA_REQUIRED = 1
+DEVICE_VBMETA_REQUIRED = 0
 
 # Samsung devices require a special flag. Enable the following if your
 # device is a Samsung device that requires flag 0 to be present
@@ -116,7 +116,7 @@ FLASH_ENABLED = 1
 
 # If your device is treble-ized, but aonly, you should set the following to
 # 1 (yes).
-FLASH_IS_AONLY = 0
+FLASH_IS_AONLY = 1
 
 # `flash-bootimage` defaults are enough for most recent devices, but legacy
 # devices won't work out of the box.
@@ -130,21 +130,21 @@ FLASH_IS_LEGACY_DEVICE = 0
 # Device manufacturer. This must match the `ro.product.vendor.manufacturer`
 # Android property. If you don't want to specify this, leave it undefined,
 # FLASH_INFO_CPU will be checked instead.
-FLASH_INFO_MANUFACTURER = Vendor
+FLASH_INFO_MANUFACTURER = realme
 
 # Device model. This must match the `ro.product.vendor.model`
 # Android property. If you don't want to specify this, leave it undefined,
 # FLASH_INFO_CPU will be checked instead.
-FLASH_INFO_MODEL = Device1
+FLASH_INFO_MODEL = narzo50a
 
 # Device CPU. This will be grepped against /proc/cpuinfo to check if
 # we're running on the specific device. Note this is a last-resort
 # method, specifying FLASH_INFO_MANUFACTURER and FLASH_INFO_MODEL is
 # recommended.
-FLASH_INFO_CPU = My Fictional System-on-a-Chip
+FLASH_INFO_CPU = MT6769Z
 
 # Space-separated list of supported device ids as reported by fastboot
-FLASH_INFO_DEVICE_IDS = model1 model2
+#FLASH_INFO_DEVICE_IDS = model1 model2
 
 ########################################################################
 # Kernel build settings
@@ -183,4 +183,4 @@ DEB_BUILD_FOR = arm64
 KERNEL_ARCH = arm64
 
 # Kernel target to build
-KERNEL_BUILD_TARGET = Image.gz
+KERNEL_BUILD_TARGET = Image.gz-dtb
