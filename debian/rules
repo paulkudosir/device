@@ -7,16 +7,53 @@ include /usr/share/linux-packaging-snippets/kernel-snippet.mk
 	
 override_dh_dwz:
 
-out/KERNEL_OBJ/dtb-merged: out/dtb-stamp
-ifeq ($(KERNEL_IMAGE_WITH_DTB),1)
-	rm -f $(KERNEL_OUT)/dtb
-	rm -f $(KERNEL_OUT)/dtb-merged
-ifeq ($(KERNEL_IMAGE_WITH_DTB_OVERLAY_IN_KERNEL),1)
-	KERNEL_IMAGE_DTB=/buildd/sources/debian/mt6768.dtb; \
-	KERNEL_IMAGE_DTB_OVERLAY=/buildd/sources/debian/dtbo.img; \
-	ufdt_apply_overlay $${KERNEL_IMAGE_DTB} $${KERNEL_IMAGE_DTB_OVERLAY} $(KERNEL_OUT)/dtb-merged
-endif
-else
-	touch $@
-endif
+out/KERNEL_OBJ/boot.img: out/KERNEL_OBJ/initramfs.gz out/KERNEL_OBJ/target-dtb
+	if [ "$(KERNEL_BOOTIMAGE_VERSION)" -eq "2" ]; then \
+		MKBOOTIMG_KERNEL_ARGS="--kernel $(KERNEL_OUT)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_BUILD_TARGET) --dtb /buildd/sources/debian/mt6768.dtb --dtb_offset $(KERNEL_BOOTIMAGE_DTB_OFFSET)"; \
+	else \
+		MKBOOTIMG_KERNEL_ARGS="--kernel $(KERNEL_OUT)/target-dtb"; \
+	fi; \
+	if [ -n "$(KERNEL_BOOTIMAGE_PATCH_LEVEL)" ]; then \
+			MKBOOTIMG_SPL_ARGS="--os_patch_level $(KERNEL_BOOTIMAGE_PATCH_LEVEL)"; \
+	else \
+			MKBOOTIMG_SPL_ARGS=""; \
+	fi; \
+	eval mkbootimg \
+		$${MKBOOTIMG_KERNEL_ARGS} \
+		--ramdisk out/KERNEL_OBJ/initramfs.gz \
+		--base $(KERNEL_BOOTIMAGE_BASE_OFFSET) \
+		--kernel_offset $(KERNEL_BOOTIMAGE_KERNEL_OFFSET) \
+		--ramdisk_offset $(KERNEL_BOOTIMAGE_INITRAMFS_OFFSET) \
+		--second_offset $(KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET) \
+		--tags_offset $(KERNEL_BOOTIMAGE_TAGS_OFFSET) \
+		--pagesize $(KERNEL_BOOTIMAGE_PAGE_SIZE) \
+		--cmdline "\"$(KERNEL_BOOTIMAGE_CMDLINE)\"" \
+		--header_version $(KERNEL_BOOTIMAGE_VERSION) \
+		$${MKBOOTIMG_SPL_ARGS} \
+		-o $@
+
+out/KERNEL_OBJ/recovery.img: out/KERNEL_OBJ/recovery-initramfs.gz out/KERNEL_OBJ/target-dtb
+	if [ "$(KERNEL_BOOTIMAGE_VERSION)" -eq "2" ]; then \
+		MKBOOTIMG_KERNEL_ARGS="--kernel $(KERNEL_OUT)/arch/$(KERNEL_ARCH)/boot/$(KERNEL_BUILD_TARGET) --dtb /buildd/sources/debian/mt6768.dtb --dtb_offset $(KERNEL_BOOTIMAGE_DTB_OFFSET)"; \
+	else \
+		MKBOOTIMG_KERNEL_ARGS="--kernel $(KERNEL_OUT)/target-dtb"; \
+	fi; \
+	if [ -n "$(KERNEL_BOOTIMAGE_PATCH_LEVEL)" ]; then \
+			MKBOOTIMG_SPL_ARGS="--os_patch_level $(KERNEL_BOOTIMAGE_PATCH_LEVEL)"; \
+	else \
+			MKBOOTIMG_SPL_ARGS=""; \
+	fi; \
+	eval mkbootimg \
+		$${MKBOOTIMG_KERNEL_ARGS} \
+		--ramdisk out/KERNEL_OBJ/recovery-initramfs.gz \
+		--base $(KERNEL_BOOTIMAGE_BASE_OFFSET) \
+		--kernel_offset $(KERNEL_BOOTIMAGE_KERNEL_OFFSET) \
+		--ramdisk_offset $(KERNEL_BOOTIMAGE_INITRAMFS_OFFSET) \
+		--second_offset $(KERNEL_BOOTIMAGE_SECONDIMAGE_OFFSET) \
+		--tags_offset $(KERNEL_BOOTIMAGE_TAGS_OFFSET) \
+		--pagesize $(KERNEL_BOOTIMAGE_PAGE_SIZE) \
+		--cmdline "\"$(KERNEL_BOOTIMAGE_CMDLINE) halium.recovery\"" \
+		--header_version $(KERNEL_BOOTIMAGE_VERSION) \
+		$${MKBOOTIMG_SPL_ARGS} \
+		-o $@
 
